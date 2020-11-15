@@ -1,0 +1,100 @@
+﻿@model OperacaoCappta.Application.CreateOperacaoRequest;
+@{
+    ViewData["Title"] = "Painel de Configuração - Operação Cappta";
+}
+
+@section scripts {
+    <script src="https://use.fontawesome.com/1eef848a40.js"></script>
+    <script src='@Url.Content("~/js/Operacao.js")' type="text/javascript"></script>
+}
+
+<div class="text-center">
+    <h4 class="display-4">Painel Configuração </h4>
+    <h5 class="display-4">Operação Cappta</h5>
+    <p>Confira detalhes do projeto <a href="https://gist.github.com/rmterra/31f2b4f589250839550f685d8873d935">Explorando Marte</a> ou <a asp-controller="PainelOperacao" asp-action="ExemploConfiguracao">Exemplo de Configuração</a>.</p>
+</div>
+
+<div>
+    <form asp-action="ExecutaOperacao" asp-controller="PainelOperacao" method="POST">
+
+        <h3>Planalto</h3>
+
+        <div class="row p-t-20">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.MalhaInferiorEsquerda, new { @class = "form-control", disabled = "disabled" })
+                    <span class="bar"></span>
+                    @Html.LabelFor(x => x.MalhaInferiorEsquerda)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.TextBoxFor(x => x.MalhaSuperiorDireita, new { @class = "form-control", maxlength = "3", placeholder = "0,0", onblur= "habilitaDesabilitaBtnExecucao()" })
+                    <span class="bar"></span>
+                    @Html.LabelFor(x => x.MalhaSuperiorDireita)
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <h3>Sondas</h3>
+
+        <div class="row" id="adicionar-sonda-div">
+            <div class="col-6">
+                <a class="btn btn-primary popup" style="color: white" data-url="PainelOperacao/AdicionarSonda" data-toggle="modal" data-target="#modal-default">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Adicionar
+                </a>
+            </div>
+        </div>
+
+        <br />
+
+        <div id="sondas_div_list" style="margin-top: 10px">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+
+                        <table id="tbSondasList"
+                               class="table color-bordered-table muted-bordered-table table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Posição Inicial</th>
+                                    <th>Direção Inicial</th>
+                                    <th>Comandos</th>
+                                    <th style="width: 80px" class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="sondasInput" id="sondasInput" />
+
+        <br /><br />
+
+        <button type="submit" class="btn btn-primary" disabled="disabled" id="btn-executar-operacao">Executar Operação</button>
+    </form>
+</div>
+
+<partial name="_Modal_Delete"/>
+
+
+@*<hr class="my-4">*@
+
+@*<div class="pt-4">
+        <h3>Saída</h3>
+
+        <div class="shadow-sm p-3 mb-5 bg-white rounded">
+            RESULTADO
+        </div>
+
+    </div>*@
+
+<script src='@Url.Content("~/js/Sondas.js")' type="text/javascript"></script>
+

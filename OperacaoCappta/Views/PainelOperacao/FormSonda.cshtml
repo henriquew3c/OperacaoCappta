@@ -1,0 +1,159 @@
+﻿@model OperacaoCappta.Dto.SondaDto
+@{
+    const string nameModal = "adicionar-sonda";
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">@ViewBag.FormTitle</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="modal-body">
+        <form asp-action="AdicionarSonda" asp-controller="PainelOperacao" method="post">
+
+            <div class="alert alert-info">
+                <i class="fa fa-info-circle"></i> Campo(s) marcado(s) com * são obrigatórios!
+            </div>
+
+            <div id="validateDiv" class="validation-summary-errors alert alert-danger m-b-40" data-valmsg-summary="true" style="display: none">
+                <span>Validação:</span>
+                <ul id="validateMessages">
+                </ul>
+            </div>
+
+            <br />
+
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.PosicaoInicial, new { @class = "form-control", maxlength = "3", id = "PosicaoInicial", placeholder = "0,0" })
+                            <span class="bar"></span>
+                            @Html.LabelFor(x => x.PosicaoInicial)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.DirecaoInicial, (List<SelectListItem>)ViewBag.DirecoesCardeais, new { @class = "form-control select2", style = "width: 100%", id = "DirecaoInicial" })
+                            <span class="bar"></span>
+                            @Html.LabelFor(x => x.DirecaoInicial)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.TextBoxFor(x => x.Comandos, new { @class = "form-control", maxlength = "300", id = "Comandos", placeholder = "LMLMLMLMM" })
+                            <span class="bar"></span>
+                            @Html.LabelFor(x => x.Comandos)
+                        </div>
+                    </div>
+                </div>
+
+                @Html.HiddenFor(x => x.Numero, new { id = "Numero" })
+
+            </div>
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <a id="btn-adicionar-sonda" href="javascript: void(0)" class="btn btn-success waves-effect">Adicionar</a>
+        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function validate() {
+        const messages = [];
+        $("#validateMessages").empty();
+
+        const field = $('#PosicaoInicial');
+        if (field.val() === '') {
+            messages.push({ name: "<li>O campo Posicao Inicial é obrigatório.</li>" });
+        }
+
+        const pattern = new RegExp(/^[1-9][,][1-9]$/i);
+        if (pattern.test(field.val()) === false) {
+            messages.push({ name: "<li>O valor informado para a Posicao Inicial é inválido. Expressão válida: 1-9,1-9.</li>" });
+        }
+
+        const field2 = $('#DirecaoInicial');
+        if (field2.val() === '') {
+            messages.push({ name: "<li>O campo Direção Inicial é obrigatório.</li>" });
+        }
+
+        const field3 = $('#Comandos');
+        if (field3.val() === '') {
+            messages.push({ name: "<li>O campo Comandos é obrigatório.</li>" });
+        }
+
+        if (messages.length > 0) {
+            messages.forEach(i => {
+                $("#validateMessages").append(i['name']);
+            });
+
+            $("#validateDiv").show();
+            return false;
+        }
+
+        $("#validateDiv").hide();
+        return true;
+    }
+
+    $('#btn-adicionar-sonda').click(function() {
+
+        if (validate()) {
+
+            const posicaoInicial = $('#PosicaoInicial').val();
+            const direcaoInicial = $('#DirecaoInicial').find(":selected").text();
+            const comandos = $('#Comandos').val();
+            const numeroEditar = $('#Numero').val();
+
+            if (numeroEditar !== '') {
+
+                //edit entry
+
+                const trId = `sonda-${numeroEditar}`;
+
+                $(`tr#${trId} td:eq(0)`).text(numeroEditar);
+                $(`tr#${trId} td:eq(1)`).text(posicaoInicial);
+                $(`tr#${trId} td:eq(2)`).text(direcaoInicial);
+                $(`tr#${trId} td:eq(3)`).text(comandos);
+
+                window.sondas.editar(numeroEditar, posicaoInicial, direcaoInicial, comandos);
+
+            } else {
+
+                const numero = window.sondas.adicionar(posicaoInicial, direcaoInicial, comandos);
+               
+                $('#tbSondasList').find('tbody').append(`
+                    <tr id="sonda-${numero}">
+                        <td>${numero}</td>
+                        <td>${posicaoInicial}</td>
+                        <td>${direcaoInicial}</td>
+                        <td>${comandos}</td>
+                        <td>
+                            <center>
+                                <a href="javascript:void(0)" title="Editar" onclick="editarSonda('sonda-${numero}')">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <a title="Remover" href="javascript:void(0)" onclick="abrirModalConfirmacao('window.sondas.remover(${numero});')">
+                                    <i class="fa fa-minus-square"></i>
+                                </a>
+                            </center>
+                        </td>
+                    </tr>
+                `);
+            }
+
+            $("#modal-default").modal('hide');
+        }
+    });
+</script>

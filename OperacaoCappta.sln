@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperacaoCappta", "OperacaoCappta\OperacaoCappta.csproj", "{32A501C5-342F-405E-AC98-83B87D7BD4D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32A501C5-342F-405E-AC98-83B87D7BD4D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A501C5-342F-405E-AC98-83B87D7BD4D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A501C5-342F-405E-AC98-83B87D7BD4D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A501C5-342F-405E-AC98-83B87D7BD4D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0399AA4-30FD-4247-9386-E62F56A48DF3}
+	EndGlobalSection
+EndGlobal
