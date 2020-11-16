@@ -12,17 +12,29 @@ namespace OperacaoCappta.Application
 {
     public class ExecutaOperacaoHandler : IRequestHandler<ExecutaOperacaoRequest, List<Sonda>>
     {
-        private readonly IMediator _mediator;
         private readonly IExploradorDePlanalto _exploradorDePlanalto;
 
-        public ExecutaOperacaoHandler(IMediator mediator, IExploradorDePlanalto exploradorDePlanalto)
+        public ExecutaOperacaoHandler(IExploradorDePlanalto exploradorDePlanalto)
         {
-            _mediator = mediator;
             _exploradorDePlanalto = exploradorDePlanalto;
         }
         public async Task<List<Sonda>> Handle(ExecutaOperacaoRequest request, CancellationToken cancellationToken)
         {
+
+            if(string.IsNullOrEmpty(request.MalhaSuperiorDireita))
+                throw new ArgumentException("O valor da malha superior direita não pode ser nulo.");
+
+            if (request.MalhaSuperiorDireita.Contains("0"))
+                throw new ArgumentException("O valor da malha superior direita não pode ser conter 0.");
+
+            if (string.IsNullOrEmpty(request.MalhaInferiorEsquerda))
+                throw new ArgumentException("O valor da malha inferior esquerda não pode ser nulo.");
+
             var planalto = new Planalto(request.MalhaInferiorEsquerda, request.MalhaSuperiorDireita);
+
+            if (string.IsNullOrEmpty(request.SondasInput))
+                throw new ArgumentException("Deve haver pelo menos uma sonda informada.");
+
             var sondas = DeserializeSondas(request.SondasInput);
 
             if (sondas.Count == 0)
@@ -49,11 +61,15 @@ namespace OperacaoCappta.Application
             var sondas = new List<Sonda>();
 
             var options = new JsonSerializerOptions();
+
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 
             var sondasDeserialize = JsonSerializer.Deserialize<SondaDto[]>(arrayJson, options);
 
-            if (sondasDeserialize == null) return sondas;
+            if (sondasDeserialize == null)
+            {
+                return sondas;
+            }
 
             foreach (var sondaDto in sondasDeserialize)
             {

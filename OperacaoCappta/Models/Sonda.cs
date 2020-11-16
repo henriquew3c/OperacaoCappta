@@ -81,8 +81,15 @@ namespace OperacaoCappta.Models
 
         public string[] GetInstrucoes()
         {
-            if (Comandos.Length < 1)
-                throw new IndexOutOfRangeException($"Imposível carregar instruções. A série de comandos deve ser maior que um caracter.");
+            if (Comandos == null)
+            {
+                throw new ArgumentException("Imposível carregar instruções. A série de comandos não deve ser nula.");
+            }
+
+            if (Comandos.Length <= 1)
+            {
+                throw new IndexOutOfRangeException("Imposível carregar instruções. A série de comandos deve ser maior que um caracter.");
+            }
 
             var instrucoes = new string[Comandos.Length];
 

@@ -23,6 +23,8 @@ namespace OperacaoCappta
             services.AddControllersWithViews();
             services.AddMediatR(typeof(Startup));
 
+            services.AddSingleton<ICorretorDaProximaPosicaoDoMovimento, CorretorDaProximaPosicaoDoMovimento>();
+            services.AddSingleton<IMovimentoParaFrente, MovimentoParaFrente>();
             services.AddSingleton<IExploradorDePlanalto, ExploradorDePlanalto>();
         }
 

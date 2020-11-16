@@ -4,19 +4,20 @@ namespace OperacaoCappta.Models
 {
     public class ExploradorDePlanalto : IExploradorDePlanalto
     {
-        private ICorretorDaProximaPosicaoDoMovimento corretorDaProximaPosicaoDoMovimento;
-        private IMovimentoParaFrente movimentoSempreParaFrente;
+        private IMovimentoParaFrente _movimentoSempreParaFrente;
+        
+        public ExploradorDePlanalto(IMovimentoParaFrente movimentoSempreParaFrente)
+        {
+            _movimentoSempreParaFrente = movimentoSempreParaFrente;
+        }
 
         public void ExecutarExploracao(Sonda sonda, Planalto planalto)
         {
-            corretorDaProximaPosicaoDoMovimento = new CorretorDaProximaPosicaoDoMovimento();
-            movimentoSempreParaFrente = new MovimentoParaFrente(corretorDaProximaPosicaoDoMovimento);
-
             sonda.planalto = planalto;
             sonda.DirecaoAtual = sonda.DirecaoInicial;
             sonda.PosicaoAtual = sonda.PosicaoInicial;
 
-            ExecutarInstrucoesDeMovimento(sonda, movimentoSempreParaFrente);
+            ExecutarInstrucoesDeMovimento(sonda, _movimentoSempreParaFrente);
 
             sonda.PosicaoFinal = new Posicao(sonda.PosicaoAtual.X, sonda.PosicaoAtual.Y);
             sonda.DirecaoFinal = sonda.DirecaoAtual;
