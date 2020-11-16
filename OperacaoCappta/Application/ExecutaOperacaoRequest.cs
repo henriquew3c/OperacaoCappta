@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using MediatR;
+using OperacaoCappta.Models;
 
 namespace OperacaoCappta.Application
 {
-    public class CreateOperacaoRequest : IRequest
+    public class ExecutaOperacaoRequest : IRequest<List<Sonda>>
     {
         [RegularExpression("[1-9][,][1-9]", ErrorMessage = "O valor informado é inválido.")]
         [Display(Name = "Malha Inferior Esquerda*")]
@@ -16,7 +18,7 @@ namespace OperacaoCappta.Application
 
         public string SondasInput { set; get; }
 
-        public CreateOperacaoRequest()
+        public ExecutaOperacaoRequest()
         {
             MalhaInferiorEsquerda = "0,0";
         }

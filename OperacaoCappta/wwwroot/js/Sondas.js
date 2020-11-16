@@ -5,7 +5,7 @@
 
 Sondas.prototype.adicionar = function (posicaoInicial, direcaoInicial, comandos) {
     const numero = this.Sondas.length + 1;
-    this.Sondas.push({ Numero: numero, PosicaoInicial: posicaoInicial, DirecaoInicial: direcaoInicial, Comandos: comandos });
+    this.Sondas.push({ Numero: numero.toString(), PosicaoInicial: posicaoInicial, DirecaoInicial: direcaoInicial, Comandos: comandos });
     this.imprimir();
     return numero;
 };

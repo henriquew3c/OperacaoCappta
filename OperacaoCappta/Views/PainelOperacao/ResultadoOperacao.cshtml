@@ -1,0 +1,30 @@
+﻿@model List<Sonda>
+
+<div class="text-center">
+    <h4 class="display-4">Resultados </h4>
+    <h5 class="display-4">Operação Cappta</h5>
+    <p>Confira detalhes do projeto <a href="https://gist.github.com/rmterra/31f2b4f589250839550f685d8873d935">Explorando Marte</a> ou <a asp-controller="PainelOperacao" asp-action="ExemploConfiguracao">Exemplo de Configuração</a>.</p>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @foreach (var sonda in Model)
+        {
+
+            <span class="font-weight-bold">Sonda Nº @sonda.Numero </span><br /><br />
+
+            <span class="font-weight-bold">Entrada</span><br /><br />
+
+            <span>Posicao Inicial: @sonda.PosicaoInicial</span><br />
+            <span>Direção Inicial: @sonda.DirecaoInicial</span><br />
+            <span>Comandos: @sonda.Comandos</span><br /><br />
+
+            <span class="font-weight-bold">Saída</span><br /><br />
+
+            <span>Posicao Final: @sonda.PosicaoInicial</span><br />
+            <span>Direção Final: @sonda.DirecaoFinal</span><br /><br />
+        }
+    </div>
+
+    <a href="/PainelOperacao" type="button" class="btn btn-lg btn-primary">Nova Operação</a>
+</div>

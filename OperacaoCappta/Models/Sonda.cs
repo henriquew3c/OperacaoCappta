@@ -5,71 +5,49 @@ namespace OperacaoCappta.Models
 {
     public class Sonda
     {
-        private readonly Planalto _planalto;
-
-        public Sonda(Planalto planalto)
+        public Sonda(string numero, string posicaoInicial, DirecaoCardeal direcaoInicial, string comandos)
         {
-            _planalto = planalto;
-
-            DefineNomeParaSonda();
+            Numero = numero;
+            PosicaoInicial = posicaoInicial;
+            DirecaoInicial = direcaoInicial;
+            Comandos = comandos;
         }
 
-        public string Nome { get; private set; }
+        public string Numero { get; }
 
-        public int[,] PosicaoInicial { get; private set; }
+        public string PosicaoInicial { get; }
+        
+        public DirecaoCardeal DirecaoInicial { get; }
 
-        public DirecaoCardeal DirecaoInicial { get; private set; }
+        public string Comandos { get; }
+        
+        public string PosicaoFinal { get; private set; }
 
-        public int[,] PosicaoFinal { get; }
+        public DirecaoCardeal DirecaoFinal { get; private set; }
 
-        public DirecaoCardeal DirecaoFinal { get; }
-
-        public void DefinePosicaoInicial(string comando)
+        
+        public void CalculaPosicaoFinal(Planalto planalto)
         {
-            if (string.IsNullOrEmpty(comando))
+            if (string.IsNullOrEmpty(Comandos))
             {
-                throw new ArgumentException($"Impossível definir a posição inicial da {Nome}. Comando Inválido.");
-            }
-
-            PosicaoInicial = new int[1,2];
-        }
-
-        public void DefineDirecaoInicial(string comando)
-        {
-            if (string.IsNullOrEmpty(comando))
-            {
-                throw new ArgumentException($"Impossível definir a direção inicial da {Nome}. Comando Inválido.");
-            }
-
-            DirecaoInicial = DirecaoCardeal.Norte;
-
-        }
-
-        public void DefinePosicaoFinal(string comando)
-        {
-            if (string.IsNullOrEmpty(comando))
-            {
-                throw new ArgumentException($"Impossível definir a posição final da {Nome}. Comando Inválido.");
+                throw new ArgumentException($"Impossível definir a posição final da sonda nº {Numero}. Comando Inválido.");
             }
 
             //todo calcular posicao final com base nos dados do planalto
-
+            //valor fixo para testar saída
+            PosicaoFinal = "5,5";
         }
 
-        public void DefineDirecaoFinal(string comando)
+        public void CalculaDirecaoFinal(Planalto planalto)
         {
-            if (string.IsNullOrEmpty(comando))
+            if (string.IsNullOrEmpty(Comandos))
             {
-                throw new ArgumentException($"Impossível definir a direção final da {Nome}. Comando Inválido.");
+                throw new ArgumentException($"Impossível definir a direção final da sonda nº {Numero}. Comando Inválido.");
             }
 
             //todo calcular direcao final com base nos dados do planalto
-        }
-
-        private void DefineNomeParaSonda()
-        {
-            var randNum = new Random();
-            Nome = "Cappta" + randNum.Next(100);
+            //valor fixo para testar saída
+            DirecaoFinal = DirecaoCardeal.Leste;
         }
     }
 }
