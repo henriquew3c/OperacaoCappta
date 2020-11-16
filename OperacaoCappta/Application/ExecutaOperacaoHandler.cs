@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -14,10 +13,12 @@ namespace OperacaoCappta.Application
     public class ExecutaOperacaoHandler : IRequestHandler<ExecutaOperacaoRequest, List<Sonda>>
     {
         private readonly IMediator _mediator;
+        private readonly IExploradorDePlanalto _exploradorDePlanalto;
 
-        public ExecutaOperacaoHandler(IMediator mediator)
+        public ExecutaOperacaoHandler(IMediator mediator, IExploradorDePlanalto exploradorDePlanalto)
         {
             _mediator = mediator;
+            _exploradorDePlanalto = exploradorDePlanalto;
         }
         public async Task<List<Sonda>> Handle(ExecutaOperacaoRequest request, CancellationToken cancellationToken)
         {
@@ -37,8 +38,7 @@ namespace OperacaoCappta.Application
         {
             foreach (var sonda in sondas)
             {
-                sonda.CalculaDirecaoFinal(planalto);
-                sonda.CalculaPosicaoFinal(planalto);
+                _exploradorDePlanalto.ExecutarExploracao(sonda, planalto);
             }
 
             return sondas;
@@ -55,11 +55,19 @@ namespace OperacaoCappta.Application
 
             if (sondasDeserialize == null) return sondas;
 
-            sondas.AddRange(sondasDeserialize.
-                Select(sondaDto => 
-                    new Sonda(sondaDto.Numero, sondaDto.PosicaoInicial, sondaDto.DirecaoInicial, sondaDto.Comandos)
-                )
-            );
+            foreach (var sondaDto in sondasDeserialize)
+            {
+                var posicaoInicial = sondaDto.PosicaoInicial.Split(",");
+
+                var sonda = new Sonda(
+                    sondaDto.Numero, 
+                    new Posicao( int.Parse(posicaoInicial[0]), int.Parse(posicaoInicial[1])), 
+                    sondaDto.DirecaoInicial, 
+                    sondaDto.Comandos
+                );
+
+                sondas.Add(sonda);
+            }
 
             return sondas;
         }

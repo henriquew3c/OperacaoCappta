@@ -5,7 +5,7 @@ namespace OperacaoCappta.Models
 {
     public class Sonda
     {
-        public Sonda(string numero, string posicaoInicial, DirecaoCardeal direcaoInicial, string comandos)
+        public Sonda(string numero, Posicao posicaoInicial, DirecaoCardeal direcaoInicial, string comandos)
         {
             Numero = numero;
             PosicaoInicial = posicaoInicial;
@@ -15,39 +15,83 @@ namespace OperacaoCappta.Models
 
         public string Numero { get; }
 
-        public string PosicaoInicial { get; }
-        
+        public Posicao PosicaoInicial { get; set; }
+
         public DirecaoCardeal DirecaoInicial { get; }
 
         public string Comandos { get; }
-        
-        public string PosicaoFinal { get; private set; }
 
-        public DirecaoCardeal DirecaoFinal { get; private set; }
+        public Posicao PosicaoFinal { get; set; }
 
+        public DirecaoCardeal DirecaoFinal { get; set; }
         
-        public void CalculaPosicaoFinal(Planalto planalto)
+        public DirecaoCardeal DirecaoAtual { get; set; }
+
+        public Posicao PosicaoAtual { get; set; }
+
+        public Planalto planalto { get; set; }
+
+        #region Movimentos Exploratórios
+
+        private void MoveSentidoHorario()
         {
-            if (string.IsNullOrEmpty(Comandos))
+            DirecaoAtual = DirecaoAtual switch
             {
-                throw new ArgumentException($"Impossível definir a posição final da sonda nº {Numero}. Comando Inválido.");
-            }
-
-            //todo calcular posicao final com base nos dados do planalto
-            //valor fixo para testar saída
-            PosicaoFinal = "5,5";
+                DirecaoCardeal.Norte => DirecaoCardeal.Leste,
+                DirecaoCardeal.Leste => DirecaoCardeal.Sul,
+                DirecaoCardeal.Sul => DirecaoCardeal.Oeste,
+                DirecaoCardeal.Oeste => DirecaoCardeal.Norte,
+                _ => DirecaoAtual
+            };
         }
 
-        public void CalculaDirecaoFinal(Planalto planalto)
+        private void MoveSentidoAntiHorario()
         {
-            if (string.IsNullOrEmpty(Comandos))
+            DirecaoAtual = DirecaoAtual switch
             {
-                throw new ArgumentException($"Impossível definir a direção final da sonda nº {Numero}. Comando Inválido.");
+                DirecaoCardeal.Norte => DirecaoCardeal.Oeste,
+                DirecaoCardeal.Oeste => DirecaoCardeal.Sul,
+                DirecaoCardeal.Sul => DirecaoCardeal.Leste,
+                DirecaoCardeal.Leste => DirecaoCardeal.Norte,
+                _ => DirecaoAtual
+            };
+        }
+
+        public void Vire(DirecaoMovimento direcaoMovimento)
+        {
+            switch (direcaoMovimento)
+            {
+                case DirecaoMovimento.Direita:
+                    MoveSentidoHorario();
+                    break;
+                case DirecaoMovimento.Esqueda:
+                    MoveSentidoAntiHorario();
+                    break;
+                default:
+                    throw new IndexOutOfRangeException($"Não é possível movimentar a sonda, comando de direção ({direcaoMovimento}) inválido.");
+            }
+        }
+
+        public void Move(IMovimentoParaFrente movimento)
+        {
+            movimento.Executar(this);
+        }
+
+        #endregion
+
+        public string[] GetInstrucoes()
+        {
+            if (Comandos.Length < 1)
+                throw new IndexOutOfRangeException($"Imposível carregar instruções. A série de comandos deve ser maior que um caracter.");
+
+            var instrucoes = new string[Comandos.Length];
+
+            for (var contador = 0; contador < Comandos.Length; contador++)
+            {
+                instrucoes[contador] = Comandos[contador].ToString();
             }
 
-            //todo calcular direcao final com base nos dados do planalto
-            //valor fixo para testar saída
-            DirecaoFinal = DirecaoCardeal.Leste;
+            return instrucoes;
         }
     }
 }

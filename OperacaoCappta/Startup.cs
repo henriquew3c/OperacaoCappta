@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OperacaoCappta.Models;
 
 namespace OperacaoCappta
 {
@@ -21,6 +22,8 @@ namespace OperacaoCappta
         {
             services.AddControllersWithViews();
             services.AddMediatR(typeof(Startup));
+
+            services.AddSingleton<IExploradorDePlanalto, ExploradorDePlanalto>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
